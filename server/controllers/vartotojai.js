@@ -13,7 +13,15 @@ const pool = mysql.createPool({
 
 exports.perziuretiVartotojus = (req, res) => {
     let query = 'SELECT * FROM user';
-
+    const rikiavimas = req.body.rikiuotiPagalAbecele;
+    if(rikiavimas){
+        query += ' ORDER BY name';
+        if(rikiavimas === 'a-z'){
+            query += ' ASC';
+        } else {
+            query += ' DESC';
+        }
+    }
     pool.query(query, (err, rows) => {
         console.log(rows)
         if(!err){
@@ -55,8 +63,16 @@ exports.postoForma = (req, res) => {
 };
 
 exports.posted = async (req, res) => {
-    const token = await req.cookies.AccessToken;
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    let token, decoded;
+
+    try {
+    token = await req.cookies.AccessToken;
+    decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch(err) {
+        res.render('createnew', {alert: 'You must be logged in to post'});
+        return;
+    }
     const ID = decoded.user.id;
     const { title, content } = req.body;
     const creationDate = new Date();
@@ -65,6 +81,12 @@ exports.posted = async (req, res) => {
     });
 };
 
-exports.perziuretiNauja = (req, res) => {
-    res.render('home');
+
+exports.perziuretiPosta = async (req, res) => {
+    const ID = req.params.id;
+    pool.query('SELECT * FROM blog JOIN user ON user.id = blog.author_id AND blog.id = ?', [ID], (err, result) => {
+        if(err) throw err;
+        if(result.length > 0) res.render('blogpost', { post: result[0] });
+        else res.sendStatus(404);
+    });
 };

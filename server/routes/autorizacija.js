@@ -27,20 +27,26 @@ exports.sukurtiVartotoja = async (req, res) => {
 
     if (password === repeatPassword) {
 
-        pool.query('SELECT email FROM user WHERE email = ?', [email], (err, results) => {
+        pool.query('SELECT email FROM user WHERE email = ? OR name = ?', [email, name], (err, results) => {
             if (err) throw err;
-            if (results.length > 0) return res.render('register', { alert: 'Email already in use' });
+            if (results.length > 0) return res.render('register', { alert: 'Email/Name already in use' });
+
+            pool.query('INSERT INTO user SET name = ?, email = ?, password = ?, register_time = ?', [name, email, hashedPass, date], (err, result) => {
+                if (!err) {
+                    const token = jwt.sign({ user: { id: result.insertId, name, email } }, process.env.ACCESS_TOKEN_SECRET);
+                    res.status(200).cookie('AccessToken', token, {
+                        maxAge: 3600000,
+                        httpOnly: true,
+                    });
+                    res.redirect('user');
+                } else {
+                    console.log(err);
+                }
+            });
         });
 
-        pool.query('INSERT INTO user SET name = ?, email = ?, password = ?, register_time = ?', [name, email, hashedPass, date], (err, rows) => {
-            if (!err) {
-                res.redirect('dashboard');
-            } else {
-                console.log(err);
-            }
-        });
     } else {
-        res.render('register', {alert: 'Passwords do not match'});
+        res.render('register', { alert: 'Passwords do not match' });
     }
 };
 
@@ -63,7 +69,7 @@ exports.prisijungti = async (req, res) => {
                 maxAge: 3600000,
                 httpOnly: true,
             });
-            res.redirect(301, 'dashboard');
+            res.redirect(301, 'user');
 
         } else {
             res.render('login', { alert: 'User with that email does not exist' });
@@ -76,11 +82,26 @@ exports.rodytiVienaVartotoja = async (req, res) => {
     const token = await req.cookies.AccessToken;
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const ID = decoded.user.id;
+    const name = decoded.user.name;
+    console.log(decoded)
 
     pool.query('SELECT * FROM user WHERE id = ?', [ID], (err, result) => {
-        console.log(result)
         if (err) throw err;
-        // return result;
-        res.render('dashboard', { result });
+        // res.render('dashboard', { result });
+
+        pool.query('SELECT * FROM user JOIN blog ON user.id = blog.author_id AND user.id = ?', [ID], (err, posts) => {
+            console.log(posts)
+            if (err) throw err;
+            res.render('dashboard', { posts, result, name });
+        });
     });
+};
+
+
+exports.atsijungti = (req, res) => {
+    res.status(200).cookie('AccessToken', null, {
+        maxAge: 1,
+        httpOnly: true,
+    });
+    res.redirect('api/blog');
 };
