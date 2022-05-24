@@ -1,0 +1,19 @@
+<form method="POST" action="/register" class="row g-3 needs-validation">
+    <div class="col-6 mt-5 container">
+        <div class="mb-3 form-floating">
+            <input type="text" value="{{this.name}}" placeholder="Name" name="name" id="name" class="form-control">
+            <label for="vardas">Name</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input type="email" value="{{this.email}}" placeholder="Elmail" name="email" id="email" class="form-control">
+            <label for="email">Email</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input type="password" value="{{this.password}}" placeholder="Password" name="password" id="password" class="form-control">
+            <label for="password">Password</label>
+        </div>
+        <div class="col-12 d-grid">
+            <button class="btn btn-primary" type="submit">Register</button>
+        </div>
+    </div>
+</form>
