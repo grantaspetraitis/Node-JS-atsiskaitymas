@@ -1,9 +1,13 @@
 {{#each rows}}
-
-<h1>{{this.id}}</h1>
-<h1>{{this.author_id}}</h1>
-<h1>{{this.title}}</h1>
-<p>{{this.content}}</p>
-
+<div class="d-inline-flex p-2">
+    <div class="col-sm-6">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{this.title}}</h5>
+                <p class="card-text">{{this.content}}</p>
+                <a href="blog/{{this.id}}" class="btn btn-primary">Read</a>
+            </div>
+        </div>
+    </div>
+</div>
 {{/each}}
-

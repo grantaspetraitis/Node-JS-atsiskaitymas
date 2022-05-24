@@ -14,8 +14,6 @@ const pool = mysql.createPool({
 exports.perziuretiVartotojus = (req, res) => {
     let query = 'SELECT * FROM user';
 
-
-
     pool.query(query, (err, rows) => {
         console.log(rows)
         if(!err){
@@ -44,6 +42,10 @@ exports.forma = (req, res) => {
     res.render('register');
 };
 
+exports.prisijungimoForma = (req, res) => {
+    res.render('login');
+};
+
 exports.dashboard = (req, res) => {
     res.render('dashboard');
 };
@@ -52,3 +54,17 @@ exports.postoForma = (req, res) => {
     res.render('createnew');
 };
 
+exports.posted = async (req, res) => {
+    const token = await req.cookies.AccessToken;
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const ID = decoded.user.id;
+    const { title, content } = req.body;
+    const creationDate = new Date();
+    pool.query('INSERT INTO blog SET author_id = ?, title = ?, content = ?, created_at = ?', [ID, title, content, creationDate], (err, result) => {
+        if(err) throw err;
+    });
+};
+
+exports.perziuretiNauja = (req, res) => {
+    res.render('home');
+};

@@ -2,17 +2,24 @@ const express = require('express');
 const router = express.Router();
 const vartotojai = require('../controllers/vartotojai');
 const autorizacija = require('./autorizacija');
+const app = express();
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+
 
 router.get('/api/users', vartotojai.perziuretiVartotojus);
 router.post('/api/users', vartotojai.perziuretiVartotojus);
-router.get('/', vartotojai.perziuretiVisusPostus);
-router.post('/', vartotojai.perziuretiVisusPostus);
+router.get('/api/blog', vartotojai.perziuretiVisusPostus);
+router.post('/api/blog', vartotojai.perziuretiVisusPostus);
 router.get('/register', vartotojai.forma);
 router.post('/register', autorizacija.sukurtiVartotoja);
-router.get('/dashboard', vartotojai.dashboard);
-router.post('/dashboard', vartotojai.dashboard);
+router.get('/dashboard', autorizacija.rodytiVienaVartotoja);
+router.post('/dashboard', autorizacija.rodytiVienaVartotoja)
 router.get('/createnew', vartotojai.postoForma);
-router.post('/createnew', vartotojai.postoForma);
-
+router.post('/createnew', vartotojai.posted);
+router.get('/login', vartotojai.prisijungimoForma);
+router.post('/login', autorizacija.prisijungti);
+router.get('/api/blog/:id', vartotojai.perziuretiNauja);
 
 module.exports = router;

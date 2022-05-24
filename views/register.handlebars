@@ -1,3 +1,11 @@
+{{#if alert}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{alert}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+
 <form method="POST" action="/register" class="row g-3 needs-validation">
     <div class="col-6 mt-5 container">
         <div class="mb-3 form-floating">
@@ -5,12 +13,18 @@
             <label for="vardas">Name</label>
         </div>
         <div class="mb-3 form-floating">
-            <input type="email" value="{{this.email}}" placeholder="Elmail" name="email" id="email" class="form-control">
+            <input type="email" value="{{this.email}}" placeholder="Elmail" name="email" id="email"
+                class="form-control">
             <label for="email">Email</label>
         </div>
         <div class="mb-3 form-floating">
-            <input type="password" value="{{this.password}}" placeholder="Password" name="password" id="password" class="form-control">
+            <input type="password" placeholder="Password" name="password" id="password" class="form-control">
             <label for="password">Password</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input type="password" placeholder="Repeat password" name="repeatPassword" id="repeatPassword"
+                class="form-control">
+            <label for="repeatPassword">Repeat password</label>
         </div>
         <div class="col-12 d-grid">
             <button class="btn btn-primary" type="submit">Register</button>
