@@ -23,7 +23,6 @@ exports.perziuretiVartotojus = (req, res) => {
         }
     }
     pool.query(query, (err, rows) => {
-        console.log(rows)
         if(!err){
             res.render('users', { rows });
         } else {
@@ -91,7 +90,6 @@ exports.posted = async (req, res) => {
 
 exports.perziuretiPosta = async (req, res) => {
     const ID = req.params.id;
-    console.log(req.params)
     pool.query('SELECT * FROM blog JOIN user ON user.id = blog.author_id AND blog.id = ?', [ID], (err, result) => {
         if(err) throw err;
         if(result.length > 0) res.render('blogpost', { post: result[0] });

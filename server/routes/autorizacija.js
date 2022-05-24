@@ -83,7 +83,6 @@ exports.rodytiVienaVartotoja = async (req, res) => {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const ID = decoded.user.id;
     const name = decoded.user.name;
-    console.log(decoded)
 
     pool.query('SELECT * FROM user WHERE id = ?', [ID], (err, result) => {
         if (err) throw err;
