@@ -10,6 +10,7 @@ app.use(cookieParser());
 
 router.get('/api/users', vartotojai.perziuretiVartotojus);
 router.get('/api/blog', vartotojai.perziuretiVisusPostus);
+router.post('/api/blog', vartotojai.perziuretiVisusPostus);
 router.get('/', vartotojai.perziuretiVisusPostus);
 router.get('/register', vartotojai.forma);
 router.post('/register', autorizacija.sukurtiVartotoja);

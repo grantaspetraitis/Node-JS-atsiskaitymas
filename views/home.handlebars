@@ -1,11 +1,23 @@
-{{#each rows}}
+<form method="POST" action="/api/blog">
+    <div class="d-flex p-2">
+        <p class="px-3">Sort by author's name</p>
+        <select class="px-3" name="rikiuotiPagalAbecele">
+            <option value="a-z">A-Z</option>
+            <option value="z-a">Z-A</option>
+        </select>
+        <input class="btn btn-primary px-3" type="submit" value="Sort">
+    </div>
+</form>
+
+{{#each result}}
 <div class="d-inline-flex p-2">
     <div class="col-sm-6">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">{{this.title}}</h5>
                 <p class="card-text">{{this.content}}</p>
-                <a href="api/blog/{{this.id}}" class="btn btn-primary">Read</a>
+                <p class="card-text">Author: {{this.name}}</p>
+                <a href="blog/{{this.id}}" class="btn btn-primary">Read</a>
             </div>
         </div>
     </div>

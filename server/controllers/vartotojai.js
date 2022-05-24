@@ -33,12 +33,19 @@ exports.perziuretiVartotojus = (req, res) => {
 };
 
 exports.perziuretiVisusPostus = (req, res) => {
-    let query = 'SELECT * FROM blog';
-
-    pool.query(query, (err, rows) => {
+    let query = 'SELECT * FROM user JOIN blog ON user.id = blog.author_id';
+    const rikiavimas = req.body.rikiuotiPagalAbecele;
+    if(rikiavimas){
+        query += ' ORDER BY name';
+        if(rikiavimas === 'a-z'){
+            query += ' ASC';
+        } else {
+            query += ' DESC';
+        }
+    }
+    pool.query(query, (err, result) => {
         if(!err){
-            console.log(rows)
-            res.render('home', { rows });
+            res.render('home', { result });
         } else {
             console.log(err);
         }
@@ -84,6 +91,7 @@ exports.posted = async (req, res) => {
 
 exports.perziuretiPosta = async (req, res) => {
     const ID = req.params.id;
+    console.log(req.params)
     pool.query('SELECT * FROM blog JOIN user ON user.id = blog.author_id AND blog.id = ?', [ID], (err, result) => {
         if(err) throw err;
         if(result.length > 0) res.render('blogpost', { post: result[0] });
